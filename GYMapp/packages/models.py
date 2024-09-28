@@ -8,7 +8,7 @@ class Packages(models.Model):
     DELETE=0
     DELETE_CHOICES=((LIVE,'Live'),(DELETE,'Delete'))
     package_name=models.CharField(max_length=200)
-    duration=models.CharField(max_length=20)
+    duration= models.IntegerField()  # Assuming package duration is in days
     price=models.FloatField()
     description=models.TextField()
     delete_status=models.IntegerField(choices=DELETE_CHOICES,default=LIVE)

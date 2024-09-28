@@ -18,16 +18,13 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf.urls.static import static
 from django.conf import settings
-from members import views
+from . import views
+
 
 urlpatterns = [
-    path('member',views.add_member,name='member'),
-    path('login',views.login_member,name='login'),
-    path('logout',views.signout_member,name='logout'),
-    path('member/update/<int:member_id>/', views.update_member, name='update_member'),
-    path('delete_member/<int:member_id>/', views.delete_member, name='delete_member'),
-    
+    path('trainer',views.add_Trainer,name='trainer'),
+    path('trainer/delete/<int:trainer_id>/', views.delete_trainer, name='delete_trainer'), 
+    path('trainer/update/<int:trainer_id>/', views.update_trainer, name='update_trainer'),
 
-    
 ]
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

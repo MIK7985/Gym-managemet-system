@@ -18,15 +18,12 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf.urls.static import static
 from django.conf import settings
-from members import views
+from . import views
 
 urlpatterns = [
-    path('member',views.add_member,name='member'),
-    path('login',views.login_member,name='login'),
-    path('logout',views.signout_member,name='logout'),
-    path('member/update/<int:member_id>/', views.update_member, name='update_member'),
-    path('delete_member/<int:member_id>/', views.delete_member, name='delete_member'),
-    
+    path('show_status',views.show_status,name='show_status'),
+    path('payment',views.payment,name='payment'),
+    path('payed/<int:member_id>/', views.payed, name='payed'),  
 
     
 ]

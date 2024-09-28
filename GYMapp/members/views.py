@@ -7,10 +7,26 @@ from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import user_passes_test
 
+
+
+def is_admin(user):
+    return user.groups.filter(name='Admin').exists()
+
+def is_trainer(user):
+    return user.groups.filter(name='Trainer').exists()
+
+def is_member(user):
+    return user.groups.filter(name='Member').exists()
+
+@login_required(login_url='login')
 def signout_member(request):
     logout(request)
     return redirect('login')
+
 
 def login_member(request):
     context = {}    
@@ -21,13 +37,14 @@ def login_member(request):
         user = authenticate(username=username, password=password)
         if user:
             login(request, user)
-            return redirect('members')  # Redirect to the members page
+            return redirect('show_status')  # Redirect to the members page
         else:
             error_message = "Invalid credentials"
             messages.error(request, error_message)
 
-    return render(request, 'members.html', context)
+    return render(request, 'login.html', context)
 
+@user_passes_test(is_admin)
 def add_member(request):
     if request.method == 'POST' and 'register' in request.POST:
         try:
@@ -49,7 +66,9 @@ def add_member(request):
                 password=password,
                 email=email
             )
-
+          
+            member_group = Group.objects.get(name='Member')
+            user.groups.add(member_group)
             # Get related Trainer and Package instances
             trainer = Trainer.objects.get(id=trainer_id) if trainer_id else None
             package = Packages.objects.get(id=package_id) if package_id else None
@@ -64,9 +83,9 @@ def add_member(request):
                 dob=dob,
                 starting_date=starting_date,
                 trainer=trainer,
-                package=package
+                package=package,
+                pending_amount=package.price
             )
-
             messages.success(request, "Member registered successfully!")
         except Exception as e:
             print(f"Error while creating Member: {e}")
@@ -88,6 +107,7 @@ def add_member(request):
 
     return render(request, 'members.html', context)
 
+@user_passes_test(is_admin)
 def update_member(request, member_id):
     member = get_object_or_404(Member, id=member_id)
 
@@ -120,15 +140,15 @@ def update_member(request, member_id):
     return render(request, 'update_member.html', context)
 
 
-    context = {
-        'member': member,
-        'trainers': Trainer.objects.all(),
-        'packages': Packages.objects.all()
-    }
-    return render(request, 'update_member.html', context)
+ 
 
+
+@user_passes_test(is_admin)
 def delete_member(request, member_id):
     member = get_object_or_404(Member, id=member_id)
     if request.method == 'POST':
         member.delete()
         return redirect(reverse('member'))
+
+
+
