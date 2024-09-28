@@ -1,0 +1,73 @@
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">Update Member Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'update_member' 0 %}" id="updateForm">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input type="text" id="name" class="form-control" name="name" required>
+                                <label class="form-label" for="name">Fullname</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating">
+                                <select class="form-select" id="gender" name="gender">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                                <label class="form-label" for="gender">Sex</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="date" name="birthdate" required>
+                                <label class="form-label" for="floatingInput">Birthdate</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" id="address" type="text" placeholder="Address" name="address">
+                        <label class="form-label" for="address">Address</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" id="phone" type="text" placeholder="Phone" name="phone">
+                        <label class="form-label" for="phone">Phone</label>
+                    </div>
+                    <div class="form-floating">
+                        <select class="form-select" name="package" required>
+                            <!-- Replace options with actual package IDs -->
+                            {% for pkg in packages %}
+                                <option value="{{ pkg.id }}">{{ pkg.package_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <label class="form-label" for="floatingSelect">Package</label>
+                    </div>
+                    <div class="form-floating">
+                        <select class="form-select" name="trainer" required>
+                            <!-- Replace options with actual trainer IDs -->
+                            {% for tr in trainers %}
+                                <option value="{{ tr.id }}">{{ tr.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <label class="form-label" for="floatingSelect">Trainer</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Member</button>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            
+            <div class="modal-footer"><button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button><button class="btn btn-primary" type="button">Save</button></div>
+        </div>
+    </div>
+</div>

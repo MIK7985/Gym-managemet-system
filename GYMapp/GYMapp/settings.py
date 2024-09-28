@@ -60,6 +60,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'GYMapp.urls'
 
+RAZORPAY_KEY_ID = 'your_key_id'
+RAZORPAY_KEY_SECRET = 'your_key_secret'
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

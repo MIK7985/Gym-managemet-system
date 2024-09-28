@@ -30,14 +30,14 @@
                                     <tbody>
                                         {% for member in members %}
                                         <tr>
-                                            <td><img class="rounded-circle me-2" width="30" height="30" src="assets/img/avatars/avatar1.jpeg">Airi Satou</td>
+                                            <td><img class="rounded-circle me-2" width="30" height="30" src="assets/img/avatars/avatar1.jpeg">{{member.name}}</td>
                                             <td>Pagadian City</td>
-                                            <td>0000000000</td>
+                                            <td>{{member.phone}}</td>
                                             <td>33</td>
-                                            <td>{{member.name}}</td>
-                                            <td>Regular</td>
-                                            <td>2008/11/28</td>
-                                            <td><span class="badge bg-danger">Expired - 2 Days Ago</span></td>
+                                            <td>{{member.gender}}</td>
+                                            <td>{{member.package}}</td>
+                                            <td>{{member.starting_date}}</td>
+                                            <td><span class="badge bg-success">Active- due {{ member.package_expiry}} days</span></td>
                                             <td><button class="btn btn-primary btn-sm d-none d-sm-inline-block mx-1" id="my-5" type="button" data-bs-target="#pay" data-bs-toggle="modal"><i class="fas fa-eye fa-sm text-white-50"></i>&nbsp;Payment</button></td>
                                         </tr>
                                         {% endfor %}

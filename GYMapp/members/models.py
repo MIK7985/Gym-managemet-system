@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from trainer.models import Trainer
 from packages.models import Packages
 from django.utils import timezone
+from datetime import datetime, timedelta
 
 # Create your models here.
 class Member(models.Model):
@@ -14,13 +15,21 @@ class Member(models.Model):
     user=models.OneToOneField(User,related_name='member_profile',on_delete=models.CASCADE)
     phone=models.CharField(max_length=10)
     gender=models.CharField(max_length=20)
-    starting_date = models.DateTimeField(auto_now_add=True)
+    starting_date = models.DateField(auto_now_add=True)
     dob=models.DateField()
+    pending_amount=models.FloatField(null=True)
     trainer=models.ForeignKey(Trainer,null=True,on_delete=models.CASCADE,related_name='trainer')
     package=models.ForeignKey(Packages,null=True,on_delete=models.CASCADE,related_name='package')
+   
     delete_status=models.IntegerField(choices=DELETE_CHOICES,default=LIVE)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
+
+
+    def package_expiry(self):
+        expiry_date = self.starting_date + timedelta(days=self.package.duration)
+        remaining_days = (expiry_date - datetime.now().date()).days
+        return remaining_days
 
     def __str__(self) -> str:
         return self.user.username
