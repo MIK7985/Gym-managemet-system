@@ -25,7 +25,7 @@ def is_member(user):
 @login_required(login_url='login')
 def signout_member(request):
     logout(request)
-    return redirect('login')
+    return redirect('index')
 
 
 def login_member(request):
@@ -48,6 +48,8 @@ def login_member(request):
 def add_member(request):
     if request.method == 'POST' and 'register' in request.POST:
         try:
+            
+            profile_picture = request.FILES.get('profile_picture', None)
             username = request.POST.get('username')
             password = request.POST.get('password')
             email = request.POST.get('email')
@@ -75,6 +77,7 @@ def add_member(request):
 
             # Create Member instance
             Member.objects.create(
+                profile_picture=profile_picture,
                 user=user,
                 name=name,
                 address=address,
@@ -107,11 +110,13 @@ def add_member(request):
 
     return render(request, 'members.html', context)
 
-@user_passes_test(is_admin)
+@login_required
 def update_member(request, member_id):
     member = get_object_or_404(Member, id=member_id)
-
+    
     if request.method == 'POST':
+        if 'profile_picture' in request.FILES:
+            member.profile_picture = request.FILES['profile_picture']
         member.name = request.POST.get('name')
         member.address = request.POST.get('address')
         member.phone = request.POST.get('phone')
@@ -149,6 +154,28 @@ def delete_member(request, member_id):
     if request.method == 'POST':
         member.delete()
         return redirect(reverse('member'))
+    
+@login_required
+def member_profile(request):
+    # Get the member profile for the logged-in user
+    member = get_object_or_404(Member, user=request.user)
+    
+    context = {
+        'member': member,
+        'trainers': Trainer.objects.all(),
+        'packages': Packages.objects.all()
+    }
+    return render(request, 'profile.html', context)
 
-
+#profile_view
+@login_required
+def member_profile_single(request, member_id):
+    member = get_object_or_404(Member, id=member_id)
+        
+    context = {
+        'member': member,
+        'trainers': Trainer.objects.all(),
+        'packages': Packages.objects.all()
+    }
+    return render(request, 'member_profile.html', context)
 

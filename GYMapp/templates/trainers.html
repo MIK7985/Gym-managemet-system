@@ -20,9 +20,9 @@
                             <thead>
                                 <tr>
                                     <th>Fullname</th>
-                                    <th>Address</th>
+                                    <th>Email</th>
                                     <th>Phone</th>
-                                    <th>Created At</th>
+                                    <th>Joined At</th>
                                     <th class="text-center">Option</th>
                                 </tr>
                             </thead>
@@ -30,7 +30,7 @@
                                 {% for Trainer in trainers %}
                                 <tr>
                                     <td><img class="rounded-circle me-2" width="30" height="30" src="{{ Trainer.image.url }}">{{ Trainer.name }}</td>
-                                    <td>{{ Trainer.address }}</td>
+                                    <td>{{ Trainer.user.email }}</td>
                                     <td>{{ Trainer.phone }}</td>
                                     <td>{{ Trainer.created_at }}</td>
                                     <td class="text-center">
@@ -97,7 +97,7 @@
         </div>
     </div>
 
-    <footer class="bg-white sticky-footer">
+    <footer class=" sticky-footer" style="background:#fcffd;">
         <div class="container my-auto">
             <div class="text-center my-auto copyright">
                 <span>Copyright © GMS 2023</span>

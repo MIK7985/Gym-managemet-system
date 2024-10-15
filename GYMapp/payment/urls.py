@@ -23,7 +23,9 @@ from . import views
 urlpatterns = [
     path('show_status',views.show_status,name='show_status'),
     path('payment',views.payment,name='payment'),
-    path('payed/<int:member_id>/', views.payed, name='payed'),  
+    path('payed/<int:member_id>/', views.payed, name='payed'),
+    path('send-notifications', views.send_expiry_notifications, name='send_expiry_notifications'),
+    
 
     
 ]

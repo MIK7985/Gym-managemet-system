@@ -1,10 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import User
-
-class Fingerprint(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    fingerprint_data = models.BinaryField()  # Store fingerprint data in binary format
+from members.models import Member
+from django.utils import timezone
 
 class Attendance(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="attendance",default=19)
+    date = models.DateField(default=timezone.now)
+    check_in_time = models.TimeField(null=True, blank=True)
+    check_out_time = models.TimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.member.name} - {self.date}"

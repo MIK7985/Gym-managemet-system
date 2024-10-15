@@ -13,19 +13,19 @@
     <link rel="stylesheet" href="{% static  'css/Navbar-Right-Links-icons.css'%}">
 </head>
 
-<body>
-    <nav class="navbar navbar-expand-md shadow py-3" style="background: var(--bs-primary-text-emphasis);">
+<body style="background:#ebf7bc;">
+    <nav class="navbar navbar-expand-md shadow py-3" style="background:#161616;">
         <div class="container-fluid"><a class="navbar-brand d-flex align-items-center" href="#" style="color: var(--bs-body-bg);">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <img src="assets/img/logo.png" alt=""></div>
-                <div class="sidebar-brand-text mx-3"><span><strong>GMS</strong></span></div>
+                <div class="sidebar-brand-icon ">
+                    <img src="{% static  'img/logoo.png'%}"  width="50em" height="50em" ></div>
+                <div class="sidebar-brand-text mx-3"><span><strong>D1 FITNESS</strong></span></div>
             </a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-2"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navcol-2">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"></li>
                     <li class="nav-item"></li>
                     <li class="nav-item"></li>
-                </ul><a class="btn btn-outline-light ms-md-2" role="button" href="#">Register</a>
+                </ul><a class="btn btn-outline-light ms-md-2" role="button" href="{%url 'register'%}">Register</a>
             </div>
         </div>
     </nav>
@@ -34,7 +34,7 @@
             <div class="card-body p-0">
                 <div class="row">
                     <div class="col-lg-6 d-none d-lg-flex">
-                        <img src="assets/img/banner.jfif" alt="">
+                        <img src="{% static  'img/banner.jfif'%}" alt="">
                     </div>
                     <div class="col-lg-6">
                         <div class="p-5">
@@ -67,13 +67,90 @@
                     <h4 class="modal-title">Create Account</h4><button class="btn-close"  type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-floating mb-3"><input type="text" class="form-control" placeholder="Fullname"><label class="form-label" for="floatingInput">Fullname</label></div>
-                    <div class="form-floating mb-3"><input type="text" class="form-control" placeholder="Fullname"><label class="form-label" for="floatingInput">Phone</label></div>
-                    <div class="form-floating mb-3"><input type="text" class="form-control" placeholder="Fullname"><label class="form-label" for="floatingInput">Email</label></div>
-                    <div class="form-floating mb-3"><input type="text" class="form-control" placeholder="Fullname"><label class="form-label" for="floatingInput">Fullname</label></div>
-                    <div class="form-floating mb-3"><input type="text" class="form-control" placeholder="Fullname"><label class="form-label" for="floatingInput">Fullname</label></div>
+                    <form id="RegForm" method='post' enctype='multipart/form-data'>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input class="form-control" type="text" placeholder="Username" name="username" required>
+                                    <label class="form-label" for="floatingInput">Username</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input class="form-control" type="password" placeholder="Password" name="password" required>
+                                    <label class="form-label" for="floatingInput">Password</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input class="form-control" type="email" placeholder="Email" name="email" required>
+                                    <label class="form-label" for="floatingInput">Email</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating">
+                                    <select class="form-select" name="gender" required>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                    <label class="form-label" for="floatingSelect">Sex</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" type="text" placeholder="Fullname" name="name" required>
+                            <label class="form-label" for="floatingInput">Fullname</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" type="text" placeholder="Address" name="address" required>
+                            <label class="form-label" for="floatingInput">Address</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" type="text" placeholder="Phone" name="phone" required>
+                            <label class="form-label" for="floatingInput">Phone</label>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input class="form-control" type="date" name="starting_date" required>
+                                    <label class="form-label" for="floatingInput">Start Date</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input class="form-control" type="date" name="birthdate" required>
+                                    <label class="form-label" for="floatingInput">Birthdate</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-floating">
+                            <select class="form-select" name="package" required>
+                                <!-- Replace options with actual package IDs -->
+                                {% for pkg in packages %}
+                                    <option value="{{ pkg.id }}">{{ pkg.package_name }}</option>
+                                {% endfor %}
+                            </select>
+                            <label class="form-label" for="floatingSelect">Package</label>
+                        </div>
+                        <div class="form-floating">
+                            <select class="form-select" name="trainer" required>
+                                <!-- Replace options with actual trainer IDs -->
+                                {% for tr in trainers %}
+                                    <option value="{{ tr.id }}">{{ tr.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <label class="form-label" for="floatingSelect">Trainer</label>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button>
+                            <button class="btn btn-primary" type="submit" name='register'>Save</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer"><button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button><button class="btn btn-primary" type="button">Save</button></div>
+               
             </div>
         </div>
     </div>

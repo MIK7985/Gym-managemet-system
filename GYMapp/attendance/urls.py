@@ -21,7 +21,10 @@ from django.conf import settings
 from attendance import views
 
 urlpatterns = [
-    path('attendance_view',views.attendance_view,name='attendance_view'),
+    path('view_attendance', views.view_attendance, name='view_attendance'),
+    path('check-in/<int:member_id>/', views.check_in, name='check_in'),
+    path('check-out/<int:member_id>/', views.check_out, name='check_out'),
+
     
 
     

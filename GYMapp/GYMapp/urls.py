@@ -21,10 +21,11 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('attendance.urls')),
     path('',include('members.urls')),
     path('',include('dashboard.urls')),
     path('',include('trainer.urls')),
-      path('',include('payment.urls')),
+    path('',include('payment.urls')),
     
 
 ]

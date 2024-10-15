@@ -26,7 +26,8 @@ urlpatterns = [
     path('logout',views.signout_member,name='logout'),
     path('member/update/<int:member_id>/', views.update_member, name='update_member'),
     path('delete_member/<int:member_id>/', views.delete_member, name='delete_member'),
-    
+    path('member_profile',views.member_profile,name='member_profile'),
+    path('member_profile_single/<int:member_id>/',views.member_profile_single, name='member_profile_single'),
 
     
 ]

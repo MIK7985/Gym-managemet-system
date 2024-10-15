@@ -10,48 +10,34 @@
                     </div>
                     <div class="card shadow">
                         <div class="card-header py-3">
-                            <p class="text-primary m-0 fw-bold">Activity Logs Lists</p>
+                            <p class="text-primary m-0 fw-bold">Attendance Records</p>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
                                <!-- attendance.html -->
-                          <h1>Attendance Records</h1>
-                            <ul>
-                           {% for record in attendance_records %}
-                         <li>{{ record.user.username }} - {{ record.timestamp }}</li>
-                           {% endfor %}
-</ul>
+                          <table class="table my-0" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Check-In Time</th>
+                                    <th>Check-Out Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in attendance_logs %}
+                                <tr>
+                                 <td>{{ log.date }}</td>
+                                <td>{{ log.check_in_time }}</td>
+                                <td>{{ log.check_out_time }}</td>
+                                </tr>
+                               {% endfor %}
 
-                                <table class="table my-0" id="dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>User</th>
-                                            <th>Type</th>
-                                            <th class="text-center">Logs</th>
-                                            <th class="text-end">Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td><img class="rounded-circle me-2" width="30" height="30" src="assets/img/avatars/avatar1.jpeg">Airi Satou</td>
-                                            <td>admin</td>
-                                            <td class="text-center">None</td>
-                                            <td class="text-end">2008/11/28</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td><img class="rounded-circle me-2" width="30" height="30" src="assets/img/avatars/avatar1.jpeg">Airi Satou</td>
-                                            <td>admin</td>
-                                            <td class="text-center">None</td>
-                                            <td class="text-end">2008/11/28</td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr></tr>
-                                    </tfoot>
-                                </table>
+                            </tbody>
+                            <tfoot>
+                                <tr></tr>
+                            </tfoot>
+                        </table>
+
                             </div>
                         </div>
                     </div>
