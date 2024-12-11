@@ -17,7 +17,7 @@
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
+  <link rel="stylesheet" href="{% static 'css/Navbar-Right-Links-icons.css' %}">
   <!-- Vendor CSS Files -->
   <link href="{% static  'bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
   <link rel="stylesheet" href="{% static  'css/Nunito.css'%}">
@@ -31,8 +31,7 @@
 </head>
 
 <body class="index-page">
-
-     <header id="header" class="header d-flex align-items-center fixed-top">
+    <header id="header" class="header d-flex align-items-center " style="background: #161616;">
         <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
       
           <a href="index.html" class="logo d-flex align-items-center me-auto me-lg-0">
@@ -50,8 +49,8 @@
             <!-- Navigation links -->
             <div class="collapse navbar-collapse" id="navcol-2">
               <ul class="navbar-nav ms-auto">
-                <li><a href="{%url 'index'%}" class="active">Home<br></a></li>
-              <li><a href="{%url 'about'%}">About</a></li>
+                <li><a href="{%url 'index'%}" >Home<br></a></li>
+              <li><a href="{%url 'about'%}" class="active">About</a></li>
               <li><a href="#team">Contact</a></li>
               <a class="btn-getstarted active" href="{%url 'register'%}">Register</a>
               <a class="btn-getstarted active" href="{%url 'login'%}">Login</a>
@@ -60,29 +59,99 @@
           </nav>
         </div>
       </header>
-  <main class="main">
+      
 
-    <!-- main photo Section -->
-    <section id="hero" class="hero section dark-background">
+    <!-- About Section -->
+    <section id="about" class="about section">
 
-      <img src="{% static  'img/main1.jpg'%}" alt="" data-aos="fade-in">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-      <div class="container">
-
-        <div class="row justify-content-center text-center" data-aos="fade-up" data-aos-delay="100">
-          <div class="col-xl-6 col-lg-8">
-            <h2>No Pain No Gain<span>.</span></h2>
-            <h5 class="text-warning">Join D1 Fithness.....</h5>
+        <div class="row gy-4">
+          <div class="col-lg-6 order-1 order-lg-2">
+            <img src="{% static  'img/about1.jpg'%}" class="img-fluid" alt="">
+          </div>
+          <div class="col-lg-6 order-2 order-lg-1 content">
+            <h1 style="font-family:Arial, Helvetica, sans-serif; font-weight: 600;">About</h1>
+            <p class="fst-italic">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+              magna aliqua.
+              Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+              velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident
+            </p>
           </div>
         </div>
-
-        
 
       </div>
 
     </section>
 
- 
+  
+
+    <!-- Trainer Section -->
+    <section id="team" class="team section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Trainers</h2>
+        <p>our trainers</p>
+      </div>
+
+      <div class="container">
+
+        <div class="row gy-4 " style="justify-content: space-evenly;">
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+            <div class="team-member">
+              <div class="member-img">
+                <img src="{% static  'img/team/trainer1.jpg'%}" class="img-fluid" alt="">
+                <div class="social">
+                  
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>Walter White</h4>
+                <span>Head Trainer</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
+            <div class="team-member">
+              <div class="member-img">
+                <img src="{% static  'img/team/trainer1.jpg'%}" class="img-fluid" alt="">
+                <div class="social">
+                
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>Jhonson</h4>
+                <span>Cardio Trainer</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3" data-aos="fade-up" data-aos-delay="300" >
+            <div class="team-member">
+              <div class="member-img">
+                <img src="{% static  'img/team/trainer1.jpg'%}" style="height: 310px;" alt="">
+                <div class="social">
+                  
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>Sarah Jhonson</h4>
+                <span>Yoga Trainer</span>
+              </div>
+            </div>
+          </div>
+
+          
+
+        </div>
+
+      </div>
+
+    </section>
 
   </main>
   <!-- footer section -->
@@ -128,8 +197,17 @@
 
   <!-- Vendor JS Files -->
   <script src="static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="static/assets/vendor/php-email-form/validate.js"></script>
+  <script src="static/assets/vendor/aos/aos.js"></script>
+  <script src="static/assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="static/assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="static/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="static/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="static/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+
   <!-- Main JS File -->
   <script src="static/assets/js/main.js"></script>
+
   <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
   <script src="{% static 'js/theme.js' %}"></script>

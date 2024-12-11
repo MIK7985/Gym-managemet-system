@@ -52,6 +52,9 @@ def dashboard(request):
 def index(request):
     return render(request,'index.html')
 
+def about(request):
+    return render(request,'about.html')
+
 def register(request):
     if request.method == 'POST' and 'register' in request.POST:
         try:
@@ -137,4 +140,7 @@ def annual_income():
     current_year = now().year
     return Payment.objects.filter(created_at__year=current_year).aggregate(Sum('amount'))['amount__sum']
 
+
+def bmi(request):
+    return render(request,'bmi.html')
 

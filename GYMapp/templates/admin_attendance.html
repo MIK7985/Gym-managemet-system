@@ -1,0 +1,78 @@
+{% extends "blank_layot.html" %}
+{% block content %}
+
+<div class="d-flex flex-column" id="content-wrapper">
+    <div id="content" class="mt-5">
+        <div class="container-fluid">
+            <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                <h3 class="text-dark mb-0">Users Activity Logs</h3>
+            </div>
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <p class="text-primary m-0 fw-bold">Attendance Records</p>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
+                        <!-- attendance_logs.html -->
+                        <table class="table my-0" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Member</th>
+                                    <th>Check-In Time</th>
+                                    <th>Check-Out Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in page_obj %}
+                                    <tr>
+                                        <td>{{ log.date }}</td>
+                                        <td>{{ log.member.name }}</td>
+                                        <td>{{ log.check_in_time }}</td>
+                                        <td>{{ log.check_out_time }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <!-- Pagination controls -->
+                        <div class="col-md-6">
+                            <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                                <ul class="pagination">
+                                    <!-- Previous Page Button -->
+                                    {% if page_obj.has_previous %}
+                                        <li class="page-item disabled">
+                                            <a class="page-link" aria-label="Previous" href="?page={{ page_obj.previous_page_number }}">
+                                                <span aria-hidden="true">«</span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                        
+                                    <!-- Page Number Links -->
+                                    {% for i in page_obj.paginator.page_range %}
+                                        <li class="page-item {% if page_obj.number == i %} active {% endif %}">
+                                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                        </li>
+                                    {% endfor %}
+                        
+                                    <!-- Next Page Button -->
+                                    {% if page_obj.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" aria-label="Next" href="?page={{ page_obj.next_page_number }}">
+                                                <span aria-hidden="true">»</span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

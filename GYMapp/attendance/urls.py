@@ -22,8 +22,12 @@ from attendance import views
 
 urlpatterns = [
     path('view_attendance', views.view_attendance, name='view_attendance'),
+    path('admin_attendance_logs', views.admin_attendance_logs, name='admin_attendance_logs'),
     path('check-in/<int:member_id>/', views.check_in, name='check_in'),
     path('check-out/<int:member_id>/', views.check_out, name='check_out'),
+    path('qr-check-in/', views.qr_check_in, name='qr_check_in'),
+    path('qr-check-out/', views.qr_check_out, name='qr_check_out'),
+    path('scanner/',  views.scanner, name='scan_qr'),  # Create this template
 
     
 

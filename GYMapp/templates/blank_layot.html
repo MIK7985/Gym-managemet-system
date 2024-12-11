@@ -30,16 +30,21 @@
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     {% if request.user|is_in_group:"Member" %}
                     <li class="nav-item"><a class="nav-link " href="{%url 'member_profile'%}"><i class="far fa-user"></i><span>Profile</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{%url 'view_attendance'%}"><i class="far fa-address-card"></i><span>Attendance</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{%url 'bmi'%}"><i class="fas fa-calculator"></i><span>BMI Calculator</span></a></li>
+
+
                     {% endif %}
                     {% if request.user|is_in_group:"Admin" %}
                     <li class="nav-item"><a class="nav-link" href="{%url 'dashboard'%}"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                    <li class="nav-item"><a class="nav-link " href="{%url 'scan_qr'%}"><i class="fas fa-camera"></i><span>Scanner</span></a></li>
                     <li class="nav-item"><a class="nav-link active" href="{%url 'member'%}"><i class="far fa-folder-open"></i><span>Manage Members</span></a></li>
                     <li class="nav-item"><a class="nav-link " href="{%url 'trainer'%}"><i class="far fa-user"></i><span>Manage Trainer</span></a></li>
-                    {% endif %}
+                    <li class="nav-item"><a class="nav-link" href="{%url 'admin_attendance_logs'%}"><i class="far fa-address-card"></i><span>Users Activity Logs</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="{%url 'show_status'%}"><i class="far fa-calendar-alt"></i><span>Member Status</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href=""><i class="fas fa-table"></i><span>Reports</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="{%url 'view_attendance'%}"><i class="far fa-address-card"></i><span>Users Activity Logs</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="{%url 'payment'%}"><i class="far fa-address-card"></i><span>Payments</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{%url 'payment'%}"><i class="fas fa-wallet"></i><span>Payments</span></a></li>
+                    {% endif %}
+                    
                     <li class="nav-item"><a class="nav-link" href="{%url 'logout'%}"><i class="far fa-clock"></i><span>Logout</span></a></li>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
