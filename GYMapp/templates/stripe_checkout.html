@@ -1,0 +1,35 @@
+{% extends "blank_layot.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text-center mb-4">Make a Payment</h2>
+        <div class="mb-3">
+            <p><strong>Member:</strong> {{ member.name }}</p>
+            <p><strong>Pending Amount:</strong> ${{ member.pending_amount }}</p>
+            <p><strong>Package:</strong> {{ member.package.name }} (Duration: {{ member.package.duration }} days)</p>
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+                <label for="amount" class="form-label">Enter Amount (in USD):</label>
+                <input 
+                    type="number" 
+                    name="amount" 
+                    id="amount" 
+                    class="form-control" 
+                    placeholder="Enter the amount" 
+                    required
+                    min="1"
+                >
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-credit-card"></i> Pay with Stripe
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

@@ -25,7 +25,9 @@ urlpatterns = [
     path('payment',views.payment,name='payment'),
     path('payed/<int:member_id>/', views.payed, name='payed'),
     path('send-notifications', views.send_expiry_notifications, name='send_expiry_notifications'),
-    
+    path('stripe-checkout', views.stripe_checkout, name='stripe_checkout'),
+    path('stripe-success/<int:member_id>/', views.stripe_success, name='stripe_success'),
+    path('stripe-cancel/', views.stripe_cancel, name='stripe_cancel'),
 
     
 ]

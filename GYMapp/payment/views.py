@@ -9,9 +9,10 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils import timezone
 from django.core.mail import send_mail  # Ensure to import this for sending emails
-from twilio.rest import Client  # Import Twilio client for WhatsApp notifications
 from django.utils.timezone import now
 from .models import Payment
+import stripe
+from django.conf import settings
 # Create your views here.
 
 @login_required
@@ -119,3 +120,82 @@ def send_expiry_email(member):
 
 
 
+
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+@login_required
+def stripe_checkout(request):
+    member = get_object_or_404(Member, user=request.user)
+    if request.method == 'POST':
+        amount = request.POST.get('amount')
+        if amount.isdigit() and int(amount) > 0:
+            amount = int(amount) * 100  # Stripe processes amounts in cents
+            
+            try:
+                # Create a Stripe Checkout Session
+                session = stripe.checkout.Session.create(
+                    payment_method_types=['card'],
+                    line_items=[{
+                        'price_data': {
+                            'currency': 'usd',
+                            'product_data': {
+                                'name': f"Payment for {member.name}",
+                            },
+                            'unit_amount': amount,
+                        },
+                        'quantity': 1,
+                    }],
+                    mode='payment',
+                    success_url=request.build_absolute_uri(
+                        reverse('stripe_success', args=[member.id]) + f"?amount={amount // 100}"
+                    ),
+                    cancel_url=request.build_absolute_uri(reverse('stripe_cancel')),
+                )
+                return redirect(session.url)
+            except stripe.error.StripeError as e:
+                messages.error(request, f"Stripe error: {str(e)}")
+        else:
+            messages.error(request, "Invalid payment amount.")
+    return render(request, 'stripe_checkout.html', {'member': member})
+
+
+
+
+@login_required
+def stripe_success(request, member_id):
+    member = get_object_or_404(Member, id=member_id)
+    amount = request.GET.get('amount')
+
+    try:
+        # Convert the amount to an integer and ensure it's valid
+        amount = int(amount)
+        if amount > 0:
+            # Update the member's pending amount
+            if member.pending_amount is not None:  # Ensure it's not null
+                member.pending_amount = max(0, member.pending_amount - amount)
+                member.save()
+
+            # Log the payment in the Payment model
+            Payment.objects.create(
+                member=member,
+                amount=amount,
+                status='completed',
+                stripe_payment_id=request.GET.get('payment_intent', ''),  # Optional
+            )
+
+            messages.success(request, "Payment was successful!")
+        else:
+            messages.error(request, "Invalid payment amount.")
+    except (ValueError, TypeError):
+        messages.error(request, "Invalid payment amount format.")
+
+    return redirect('member_profile')
+
+
+
+
+@login_required
+def stripe_cancel(request):
+    messages.error(request, "Payment was canceled.")
+    return redirect('payment')

@@ -104,8 +104,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Payment settings (If you're using Razorpay or Stripe, add your keys here)
-RAZORPAY_API_KEY = os.getenv('RAZORPAY_API_KEY')
-RAZORPAY_API_SECRET = os.getenv('RAZORPAY_API_SECRET')
+# Stripe settings
+STRIPE_PUBLIC_KEY = "pk_test_51QUaJRCQhZjvj7V1ld1zKl39Xsn77UYcDGjcvcYe8Yo8JSf7k8lTt2guBKdKINcsNS8n0efjhepaGCvRUd5vSnLp00PcTW6OuS"
+STRIPE_SECRET_KEY = "sk_test_51QUaJRCQhZjvj7V1AckYzAK26KqidAjY0c32j1M1wFHIxt1W1AZSKcPas8HO4VJOqFh107GMsdTPXObqvJKUIRuU00d7KxBs0Y"
+
 
 # Email settings for sending payment confirmations (use your email provider details)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
