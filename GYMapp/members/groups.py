@@ -1,4 +1,5 @@
 from django.contrib.auth.models import Group
+
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 
@@ -16,3 +17,6 @@ def create_groups_after_migration(sender, **kwargs):
     Ensure groups are created after migrations are applied.
     """
     create_groups()
+
+
+
