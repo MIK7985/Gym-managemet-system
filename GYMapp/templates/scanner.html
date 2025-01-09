@@ -1,0 +1,173 @@
+{% load static %}
+{% load user_tags %}
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Check-In</title>
+    <meta name="description" content="Gym Membership System">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Nunito.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/fontawesome-all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Navbar-Right-Links-icons.css' %}">
+    <script src="{% static 'js/html5-qrcode.min.js' %}"></script>
+</head>
+
+<body id="page-top" class="bg-light">
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <nav class="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark" style="background:#000000;">
+            <div class="container-fluid d-flex flex-column p-0">
+                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                    <div class="sidebar-brand-icon">
+                        <img src="{% static 'img/logoo.png' %}" width="50em" height="50em">
+                    </div>
+                    <div class="sidebar-brand-text mx-3"><span>D1 FITNESS</span></div>
+                </a>
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    {% if request.user|is_in_group:"Member" %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'member_profile' %}"><i class="far fa-user"></i><span>Profile</span></a></li>
+                    {% endif %}
+                    {% if request.user|is_in_group:"Admin" %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'scan_qr' %}"><i class="fas fa-camera"></i><span>Scanner</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'member' %}"><i class="far fa-folder-open"></i><span>Manage Members</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'trainer' %}"><i class="far fa-user"></i><span>Manage Trainer</span></a></li>
+                    {% endif %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'show_status' %}"><i class="far fa-calendar-alt"></i><span>Member Status</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href=""><i class="fas fa-table"></i><span>Reports</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'view_attendance' %}"><i class="far fa-address-card"></i><span>Users Activity Logs</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'payment' %}"><i class="fas fa-wallet"></i><span>Payments</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}"><i class="far fa-clock"></i><span>Logout</span></a></li>
+                </ul>
+                <div class="text-center d-none d-md-inline">
+                    <button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <div class="container-fluid py-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-header bg-dark text-white text-center">
+                            <h4>Scan QR Code to Check In</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <!-- Scanner Div -->
+                            <div id="reader-container" style="display: flex; justify-content: center; margin-bottom: 30px;">
+                                <div id="reader" style="width: 100%; max-width: 600px; height: 400px; border: 2px solid #000;"></div>
+                            </div>
+                            <!-- Start and Stop Scanning Buttons -->
+                            <div class="mt-3">
+                                <button id="startButton" class="btn btn-success px-4" style="display: none; margin-right: 10px;">Start Scanning</button>
+                                <button id="stopButton" class="btn btn-danger px-4">Stop Scanning</button>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <p class="text-muted mb-0">Ensure your QR code is clearly visible to the scanner.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QR Code Scanner Script -->
+        <script>
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        
+            const csrftoken = getCookie('csrftoken');
+            const html5QrCode = new Html5Qrcode("reader");
+        
+            function startScanning() {
+                html5QrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: { width: 300, height: 300 } },
+                    onScanSuccess,
+                    onScanError
+                ).then(() => {
+                    console.log("QR Code scanning started.");
+                    document.getElementById("startButton").style.display = "none";
+                    document.getElementById("stopButton").style.display = "inline-block";
+                }).catch(err => {
+                    alert("Could not start the camera. Please check permissions or try a different browser.");
+                });
+            }
+        
+            function stopScanning() {
+                html5QrCode.stop().then(() => {
+                    console.log("QR Code scanning stopped.");
+                    document.getElementById("startButton").style.display = "inline-block";
+                    document.getElementById("stopButton").style.display = "none";
+                }).catch(err => {
+                    console.error("Error stopping the scanning:", err);
+                });
+            }
+        
+            function onScanSuccess(decodedText) {
+                const memberId = decodedText.split(':')[1];
+                fetch('http://127.0.0.1:8000/qr-check-in/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify({ member_id: memberId }),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(data => {
+                            throw new Error(data.message || "An unknown error occurred.");
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    if (error.message === 'Member has already checked in today.') {
+                        alert("You have already checked in today.");
+                    } else if (error.message === 'Member not found!') {
+                        alert("Invalid QR Code. Member not found.");
+                    } else {
+                        alert("Error during check-in: " + error.message);
+                    }
+                });
+            }
+        
+            function onScanError(errorMessage) {
+                console.warn(`QR code scan error: ${errorMessage}`);
+            }
+        
+            // Start scanning on page load
+            startScanning();
+        
+            // Button event listeners
+            document.getElementById("startButton").addEventListener("click", startScanning);
+            document.getElementById("stopButton").addEventListener("click", stopScanning);
+        </script>
+        
+    </div>
+</body>
+
+</html>

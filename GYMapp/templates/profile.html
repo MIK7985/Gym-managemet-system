@@ -1,0 +1,139 @@
+{% extends 'blank_layot.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center text-primary">{{ member.name }}'s Profile</h2>
+    <div class="card shadow-lg rounded">
+        <div class="card-body text-center">
+            {% if member.profile_picture %}
+                <img src="{{ member.profile_picture.url }}" alt="Profile Picture" class="rounded-circle mb-3 border" style="width: 150px; height: 150px;">
+            {% else %}
+                <img src="{% static 'img/default-profile.png' %}" alt="Default Profile Picture" class="rounded-circle mb-3 border" style="width: 150px; height: 150px;">
+            {% endif %}
+            <h4 class="text-primary">{{ member.name }}</h4>
+            <p class="text-muted">{{ member.address }}</p>
+        </div>
+        <hr>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <p><strong>Username:</strong> {{ member.user.username }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Email:</strong> {{ member.user.email }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Phone:</strong> {{ member.phone }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Gender:</strong> {{ member.gender }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Date of Birth:</strong> {{ member.dob }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Starting Date:</strong> {{ member.starting_date }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Trainer:</strong> {{ member.trainer.name }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Package:</strong> {{ member.package.name }} (Duration: {{ member.package.duration }} days)</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Pending Amount:</strong> ₹{{ member.pending_amount }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Package Expiry in:</strong> {{ member.package_expiry }} days</p>
+                </div>
+            </div>
+            <div class="mt-4 text-center">
+                <img src="{{ member.qr_code.url }}" alt="QR Code for {{ member.name }}" class="border" style="width: 150px; height: 150px;">
+            </div>
+        </div>
+        <div class="card-footer text-muted text-center">
+            Profile Created On: {{ member.created_at }} | Last Updated: {{ member.updated_at }}
+        </div>
+    </div>
+    <div class="text-center mt-4">
+        <a href="#" class="btn btn-primary mx-2" data-bs-toggle="modal" data-bs-target="#updateModal" 
+           data-member-id="{{ member.id }}"
+           data-member-name="{{ member.name }}"
+           data-member-gender="{{ member.gender }}"
+           data-member-birthdate="{{ member.dob }}"
+           data-member-address="{{ member.address }}"
+           data-member-phone="{{ member.phone }}">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="{% url 'check_in' member.id %}" class="btn btn-success mx-2"><i class="fas fa-sign-in-alt"></i> Check In</a>
+        <a href="{% url 'check_out' member.id %}" class="btn btn-danger mx-2"><i class="fas fa-sign-out-alt"></i> Check Out</a>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="updateModalLabel">Update Member Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'update_member' 0 %}" id="updateForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="profile_picture" class="form-label">Profile Picture</label>
+                        <input type="file" class="form-control" id="profile_picture" name="profile_picture">
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Fullname</label>
+                        <input type="text" id="name" class="form-control" name="name" value="{{ member.name }}" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select class="form-select" id="gender" name="gender">
+                                <option value="Male" {% if member.gender == "Male" %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if member.gender == "Female" %}selected{% endif %}>Female</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="birthdate" class="form-label">Birthdate</label>
+                            <input type="date" id="birthdate" class="form-control" name="birthdate" value="{{ member.dob }}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" id="address" class="form-control" name="address" value="{{ member.address }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="text" id="phone" class="form-control" name="phone" value="{{ member.phone }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="package" class="form-label">Package</label>
+                        <select class="form-select" id="package" name="package">
+                            {% for pkg in packages %}
+                                <option value="{{ pkg.id }}" {% if pkg.id == member.package.id %}selected{% endif %}>{{ pkg.package_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="trainer" class="form-label">Trainer</label>
+                        <select class="form-select" id="trainer" name="trainer">
+                            {% for tr in trainers %}
+                                <option value="{{ tr.id }}" {% if tr.id == member.trainer.id %}selected{% endif %}>{{ tr.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update Member</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

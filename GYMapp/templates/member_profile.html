@@ -1,0 +1,83 @@
+<div class="container mt-5">
+    <h2>{{ member.name }}'s Profile</h2>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            {% if member.profile_picture %}
+                    <img src="{{ member.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="width: 150px; height: 150px;">
+                {% else %}
+                    <img src="{% static 'img/default-profile.png' %}" alt="Default Profile Picture" class="rounded-circle" style="width: 150px; height: 150px; align:center;">
+                {% endif %}
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>Username:</strong> {{ member.user.username }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Email:</strong> {{ member.user.email }}</p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>Phone:</strong> {{ member.phone }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Gender:</strong> {{ member.gender }}</p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>Date of Birth:</strong> {{ member.dob }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Starting Date:</strong> {{ member.starting_date }}</p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>Trainer:</strong> {{ member.trainer.name }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Package:</strong> {{ member.package.name }} (Duration: {{ member.package.duration }} days)</p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>Pending Amount:</strong> ₹{{ member.pending_amount }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Package Expiry in:</strong> {{ member.package_expiry }} days</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <p><strong>Address:</strong> {{ member.address }}</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#updateModal" 
+                        data-member-id="{{ member.id }}"
+                        data-member-name="{{ member.name }}"
+                        data-member-gender="{{ member.gender }}"
+                        data-member-birthdate="{{ member.dob }}"
+                        data-member-address="{{ member.address }}"
+                        data-member-phone="{{ member.phone }}">
+                         <button class="btn btn-primary btn d-none d-sm-inline-block mx-1" id="my-1" type="button">
+                             <i class="fas fa-check-circle fa-sm text-white-50"></i>&nbsp;Edit
+                         </button>
+                     </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-footer text-muted text-center">
+                Profile Created On: {{ member.created_at }} | Last Updated: {{ member.updated_at }}
+            </div>
+        </div>
+    </div>

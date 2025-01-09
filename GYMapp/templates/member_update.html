@@ -1,0 +1,34 @@
+{% extends "blank_layot.html" %}
+
+        {% block content%}
+<!-- update_member.html -->
+<h2>Update Member Information</h2>
+<form method="POST" action="{% url 'update_member' member.id %}">
+                        
+    {% csrf_token %}
+    <div class="row">
+        <div class="col">
+            
+            <div class="form-floating mb-3">
+                <input type="text" id="name" class="form-control form-control" name="name" value="{{ member.name }}" required><br><br>
+                <label class="form-label" for="{{ form.name.id_for_label }}">Fullname</label></div>
+            </div>
+        <div class="col">
+            <div class="form-floating">
+                <select class="form-select form-select" value="{{ member.gender }}" aria-label="Floating label select example" id="floatingSelect" name="gender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+                <label class="form-label" for="floatingSelect">Sex</label></div>
+        </div>
+    </div>
+    <div class="form-floating mb-3">
+        <input class="form-control form-control" value="{{ member.address }}" type="text" placeholder="Address" name="address">
+        <label class="form-label" for="floatingInput">Address</label></div>
+    <div class="form-floating mb-3">
+        <input class="form-control form-control" type="text" value="{{ member.phone }}" placeholder="Phone" name="phone">
+        <label class="form-label" for="floatingInput">Phone</label></div>
+    <button type="submit" class="btn btn-primary">Update Member</button>
+    </div>
+</form>
+        {% endblock content %}

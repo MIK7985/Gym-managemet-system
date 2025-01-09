@@ -1,0 +1,252 @@
+{% extends "blank_layot.html" %}
+{% block content %}
+
+<div class="d-flex flex-column" id="content-wrapper">
+    <div id="content" class="mt-5">
+        <div class="container-fluid">
+            <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                <h3 class="text-dark mb-0">Staff Management</h3>
+                <button class="btn btn-primary btn-sm d-none d-sm-inline-block" type="button" data-bs-toggle="modal" data-bs-target="#add">
+                    <i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Add Staff
+                </button>
+            </div>
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <p class="text-primary m-0 fw-bold">Trainers Lists</p>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive table mt-2" id="dataTable-1" role="grid">
+                        <table class="table my-0" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Fullname</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Joined At</th>
+                                    <th class="text-center">Option</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for Trainer in trainers %}
+                                <tr>
+                                    <td><img class="rounded-circle me-2" width="30" height="30" src="{{ Trainer.image.url }}">{{ Trainer.name }}</td>
+                                    <td>{{ Trainer.user.email }}</td>
+                                    <td>{{ Trainer.phone }}</td>
+                                    <td>{{ Trainer.created_at }}</td>
+                                    <td class="text-center">
+                                       <!-- Button that triggers the modal -->
+                                       <a href="#" 
+                                       data-bs-toggle="modal" 
+                                       data-bs-target="#updateModal" 
+                                       data-trainer-id="{{ Trainer.id }}" 
+                                       data-trainer-name="{{ Trainer.name }}" 
+                                       data-trainer-gender="{{ Trainer.gender }}" 
+                                       data-trainer-address="{{ Trainer.address }}" 
+                                       data-trainer-phone="{{ Trainer.phone }}">
+                                        <button class="btn btn-warning btn-sm d-none d-sm-inline-block mx-1" id="my-1" type="button">
+                                            <i class="fas fa-check-circle fa-sm text-white-50"></i>&nbsp;Update
+                                        </button>
+                                    </a>
+                                    
+
+
+
+                                    <button class="btn btn-danger btn-sm mx-1" type="button" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#removeModal" 
+                                    data-trainer-id="{{ Trainer.id }}">
+                                <i class="fas fa-trash-alt fa-sm text-white-50"></i>&nbsp;Remove
+                            </button>
+                            
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr></tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                            <ul class="pagination">
+                                {% if trainers.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" aria-label="Previous" href="?page={{ trainers.previous_page_number }}">
+                                        <span aria-hidden="true">«</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {% for i in trainers.paginator.page_range %}
+                                <li class="page-item {% if trainers.number == i %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                </li>
+                                {% endfor %}
+                                {% if trainers.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" aria-label="Next" href="?page={{ trainers.next_page_number }}">
+                                        <span aria-hidden="true">»</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class=" sticky-footer" style="background:#fcffd;">
+        <div class="container my-auto">
+            <div class="text-center my-auto copyright">
+                <span>Copyright © GMS 2023</span>
+            </div>
+        </div>
+    </footer> 
+</div>
+
+<a class="border rounded d-inline scroll-to-top" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Add Trainer Modal -->
+<div class="modal fade" id="add" tabindex="-1" aria-labelledby="addLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addLabel">Add Trainer</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% if messages %}
+                <div class="alert">
+                    {% for message in messages %}
+                    <li class='{{ message.tags }}'>{{ message }}</li>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <form id="RegForm" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="text" placeholder="Username" name="username" required>
+                                <label for="username">Username</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="password" placeholder="Password" name="password" required>
+                                <label for="password">Password</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="email" placeholder="Email" name="email" required>
+                                <label for="email">Email</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating">
+                                <select class="form-select" name="gender" required>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                                <label for="gender">Sex</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" type="text" placeholder="Fullname" name="name" required>
+                        <label for="name">Fullname</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" type="text" placeholder="Address" name="address" required>
+                        <label for="address">Address</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" type="text" placeholder="Phone" name="phone" required>
+                        <label for="phone">Phone</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit" name="register">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Trainer Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">Update Member Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'update_trainer' 0 %}" id="updateForm">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input type="text" id="name" class="form-control" name="name" required>
+                                <label class="form-label" for="name">Fullname</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating">
+                                <select class="form-select" id="gender" name="gender">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                                <label class="form-label" for="gender">Sex</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" id="address" type="text" placeholder="Address" name="address">
+                        <label class="form-label" for="address">Address</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" id="phone" type="text" placeholder="Phone" name="phone">
+                        <label class="form-label" for="phone">Phone</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Update Member</button>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- Remove Trainer Modal -->
+<div class="modal fade" id="removeModal" tabindex="-1" aria-labelledby="removeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeModalLabel">Remove Trainer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove this trainer?</p>
+                <form method="POST" action="{% url 'delete_trainer' 0 %}" id="removeForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="trainer_id" id="removeTrainerId">
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

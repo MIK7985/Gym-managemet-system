@@ -1,0 +1,91 @@
+{% extends 'blank_layot.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center text-primary">BMI Calculator</h2>
+    <div class="card shadow-lg rounded">
+        <div class="card-body">
+            <form id="bmiCalculatorForm" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <!-- Height Input -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="height" class="form-label">Height (in cm)</label>
+                        <input type="number" id="height" class="form-control" placeholder="Enter your height" required>
+                        <div class="invalid-feedback">
+                            Please enter your height.
+                        </div>
+                    </div>
+                    <!-- Weight Input -->
+                    <div class="col-md-6">
+                        <label for="weight" class="form-label">Weight (in kg)</label>
+                        <input type="number" id="weight" class="form-control" placeholder="Enter your weight" required>
+                        <div class="invalid-feedback">
+                            Please enter your weight.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BMI Output -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="bmiResult" class="form-label">Your BMI</label>
+                        <input type="text" id="bmiResult" class="form-control" placeholder="BMI will be calculated here" readonly>
+                    </div>
+                </div>
+
+                <!-- BMI Category -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="bmiCategory" class="form-label">Category</label>
+                        <input type="text" id="bmiCategory" class="form-control" placeholder="Category will be displayed here" readonly>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary" id="calculateBmiButton">
+                        <i class="fas fa-calculator"></i> Calculate BMI
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const calculateButton = document.getElementById("calculateBmiButton");
+        const heightInput = document.getElementById("height");
+        const weightInput = document.getElementById("weight");
+        const bmiResult = document.getElementById("bmiResult");
+        const bmiCategory = document.getElementById("bmiCategory");
+
+        calculateButton.addEventListener("click", () => {
+            const height = parseFloat(heightInput.value) / 100; // Convert height to meters
+            const weight = parseFloat(weightInput.value);
+
+            if (!height || !weight || height <= 0 || weight <= 0) {
+                alert("Please enter valid height and weight values.");
+                return;
+            }
+
+            const bmi = (weight / (height * height)).toFixed(2);
+            bmiResult.value = bmi;
+
+            let category = "";
+            if (bmi < 18.5) {
+                category = "Underweight";
+            } else if (bmi >= 18.5 && bmi <= 24.9) {
+                category = "Normal weight";
+            } else if (bmi >= 25 && bmi <= 29.9) {
+                category = "Overweight";
+            } else {
+                category = "Obese";
+            }
+            bmiCategory.value = category;
+        });
+    });
+</script>
+{% endblock %}
