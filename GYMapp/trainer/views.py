@@ -105,3 +105,12 @@ def delete_trainer(request, trainer_id):
         return redirect('trainer')  # Redirect to the list of trainers
 
     return redirect('trainer')  # Redirect if not a POST request
+
+
+
+
+@login_required
+def trainer_member(request):
+    trainer = get_object_or_404(Trainer, user=request.user) # Assuming the logged-in user is linked to a Trainer
+    members = trainer.members.all()
+    return render(request, 'trainer_member.html', {'members': members})

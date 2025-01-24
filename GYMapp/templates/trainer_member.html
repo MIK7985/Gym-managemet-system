@@ -1,0 +1,193 @@
+{% extends "blank_layot.html" %}
+{% load age %}
+{% load static %}
+
+
+        {% block content%}
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content" class="mt-5" >
+                <div class="container-fluid">
+                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                        <h3 class="text-dark mb-0">Members Management</h3>
+                    </div>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold">Members Lists</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
+                                <table class="table my-0" id="dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Fullname</th>
+                                            <th>Phone</th>
+                                            <th>Age</th>
+                                            <th>Sex</th>
+                                            <th>Type</th>
+                                            <th>Start date</th>
+                                            <th>Option</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {%for member in members%}
+                                        <tr>
+                                           
+                                            <td>{% if member.profile_picture %}
+                                                <img src="{{ member.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="width: 30px; height: 30px;"> {{member.name}}</td>
+                                            {% else %}
+                                                <img src="{% static 'img/default-profile.png' %}" alt="Default Profile Picture" class="rounded-circle" style="width: 30px; height: 30px;">
+                                             {{member.name}}</td>
+                                            {% endif %}
+                                            <td>{{member.phone}}</td>
+                                            <td>{{ member.dob|age}}</td>
+                                            <td>{{member.gender}}</td>
+                                            <td>{{member.package}}</td>
+                                            <td>{{member.starting_date}}</td>
+                                            <td>
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" 
+                                                    data-member-id="{{ member.id }}"
+                                                    data-member-name="{{ member.name }}"
+                                                    data-member-gender="{{ member.gender }}"
+                                                    data-member-birthdate="{{ member.dob }}"
+                                                    data-member-address="{{ member.address }}"
+                                                    data-member-phone="{{ member.phone }}"
+                                                    data-member-picture="{% if member.profile_picture %}{{ member.profile_picture.url }}{% else %}{% static 'img/default-profile.png' %}{% endif %}"
+                                                    data-member-username="{{ member.user.username }}"
+                                                    data-member-email="{{ member.user.email }}"
+                                                    data-member-starting-date="{{ member.starting_date }}"
+                                                    
+                                                    {% if member.trainer %}
+                                                        data-member-trainer="{{ member.trainer.name }}"
+                                                    {% else %}
+                                                        data-member-trainer="No Trainer"
+                                                    {% endif %}
+                                                    
+                                                    {% if member.package %}
+                                                        data-member-package="{{ member.package.name }}"
+                                                        data-member-package-duration="{{ member.package.duration }}"
+                                                    {% else %}
+                                                        data-member-package="No Package"
+                                                        data-member-package-duration="N/A"
+                                                    {% endif %}
+                                                    
+                                                    data-member-pending-amount="{{ member.pending_amount }}">
+                                                        <button class="btn btn-primary btn-sm d-none d-sm-inline-block mx-1" id="my-1" type="button">
+                                                            <i class="fas fa-check-circle fa-sm text-white-50"></i>&nbsp;View
+                                                        </button>
+                                                    </a>
+                                     </td>
+                            
+                                        </tr>
+                                        {%endfor%}
+                                        
+                                        
+                                    </tbody>
+                                    <tfoot>
+                                        <tr></tr>
+                                    </tfoot> 
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                                    <ul class="pagination">
+                                        {%if members.has_previous%}
+                                        <li class="page-item disabled"><a class="page-link" aria-label="Previous" href="?page={{members.previous_page_number}}"><span aria-hidden="true">«</span></a></li>
+                                        {%endif%}
+                                        {%for i in members.paginator.page_range%}
+                                        <li class="page-item active"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                                        {%endfor%}
+                                        {%if members.has_next%}
+                                        <li class="page-item"><a class="page-link" aria-label="Next" href='?page={{members.next_page_number}}'><span aria-hidden="true">»</span></a></li>
+                                        {%endif%}
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class=" sticky-footer" style="background:#fcffd6;">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © MikWebs 2024</span></div>
+                </div>
+            </footer>
+        </div>
+        <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+   
+
+<!--profile-->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profileModalLabel">Member Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container mt-5">
+                    <h2 id="profileName">Member's Profile</h2>
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <div class="text-center mb-4">
+                                <img id="profilePicture" src="{% static 'img/default-profile.png' %}" alt="Profile Picture" class="rounded-circle" style="width: 150px; height: 150px;">
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <p><strong>Username:</strong> <span id="profileUsername"></span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <p><strong>Phone:</strong> <span id="profilePhone"></span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Gender:</strong> <span id="profileGender"></span></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <p><strong>Date of Birth:</strong> <span id="profileDob"></span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Starting Date:</strong> <span id="profileStartingDate"></span></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <p><strong>Trainer:</strong> <span id="profileTrainer"></span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Package:</strong> <span id="profilePackage"></span> (Duration: <span id="profilePackageDuration"></span> days)</p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <p><strong>Pending Amount:</strong> ₹<span id="profilePendingAmount"></span></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p><strong>Address:</strong> <span id="profileAddress"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted text-center">
+                            Profile Created On: <span id="profileCreatedAt"></span> | Last Updated: <span id="profileUpdatedAt"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+       
+            </div>
+        </div>
+    </div>
+
+    {% endblock content %}

@@ -1,0 +1,201 @@
+{% extends "blank_layot.html" %}
+
+{% block content %}
+<div class="d-flex flex-column" id="content-wrapper">
+    <div id="content" class="mt-5">
+        <div class="container-fluid">
+            <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                <h3 class="text-dark mb-0">Package Management</h3>
+                <button class="btn btn-primary btn-sm d-none d-sm-inline-block" type="button" data-bs-toggle="modal" data-bs-target="#add">
+                    <i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Add Package
+                </button>
+            </div>
+            <div class="row">
+                {% for Package in packages %}
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">{{ Package.package_name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Duration: {{ Package.duration }} days</h6>
+                            <p class="card-text">Price: ₹{{ Package.price }}</p>
+                            <p class="card-text">{{ Package.description }}</p>
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-warning btn-sm" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#packageUpdateModal" 
+                                    data-package-id="{{ Package.id }}" 
+                                    data-package-name="{{ Package.package_name }}" 
+                                    data-duration="{{ Package.duration }}" 
+                                    data-price="{{ Package.price }}" 
+                                    data-description="{{ Package.description }}">
+                                <i class="fas fa-edit"></i>&nbsp;Update
+                            </button>
+
+                            <button class="btn btn-danger btn-sm" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#packageRemoveModal" 
+                                    data-package-id="{{ Package.id }}">
+                                <i class="fas fa-trash-alt"></i>&nbsp;Delete
+                            </button>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6">
+                <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                    <ul class="pagination">
+                        {% if packages.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" aria-label="Previous" href="?page={{ packages.previous_page_number }}">
+                                <span aria-hidden="true">«</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% for i in packages.paginator.page_range %}
+                        <li class="page-item {% if packages.number == i %}active{% endif %}">
+                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                        {% endfor %}
+                        {% if packages.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" aria-label="Next" href="?page={{ packages.next_page_number }}">
+                                <span aria-hidden="true">»</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <footer class="sticky-footer" style="background:#fcffd6;">
+        <div class="container my-auto">
+            <div class="text-center my-auto copyright">
+                <span>Copyright © GMS 2023</span>
+            </div>
+        </div>
+    </footer>
+</div>
+<a class="border rounded d-inline scroll-to-top" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Add Package Modal -->
+<div class="modal fade" id="add" tabindex="-1" aria-labelledby="addLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addLabel">Add Trainer</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% if messages %}
+                <div class="alert">
+                    {% for message in messages %}
+                    <li class='{{ message.tags }}'>{{ message }}</li>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <form id="RegForm" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-floating mb-3">
+                        <input class="form-control" type="text" placeholder="Package Name" name="package_name" required>
+                        <label for="package_name">Package Name</label>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="number" placeholder="Duration" name="duration" required>
+                                <label for="duration">Duration (in days)</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="number" placeholder="Price" name="price" required>
+                                <label for="username">Price</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" type="text" placeholder="Description" name="description" required>
+                        <label for="package_name">Description</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit" name="register">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Update Package Modal -->
+<div class="modal fade" id="packageUpdateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">Update Member Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'update_package' 0 %}" id="updateForm">
+                    {% csrf_token %}
+                    <div class="form-floating mb-3">
+                        <input class="form-control" type="text" placeholder="Package Name" name="package_name" required>
+                        <label for="package_name">Package Name</label>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="number" placeholder="Duration" name="duration" required>
+                                <label for="duration">Duration (in days)</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="number" placeholder="Price" name="price" required>
+                                <label for="username">Price</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" type="text" placeholder="Description" name="description" required>
+                        <label for="package_name">Description</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Update Package</button>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- Remove Package Modal --> 
+<div class="modal fade" id="packageRemoveModal" tabindex="-1" aria-labelledby="removeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeModalLabel">Remove Package</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove this package?</p>
+                <form method="POST" action="{% url 'delete_package' 0 %}" id="removeForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="package_id" id="removePackageId">
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

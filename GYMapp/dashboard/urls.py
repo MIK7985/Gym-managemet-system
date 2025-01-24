@@ -22,7 +22,7 @@ from dashboard import views
 
 urlpatterns = [
     path('dashboard',views.dashboard,name='dashboard'),
-    path('index',views.index,name='index'),
+    path('',views.index,name='index'),
     path('register',views.register,name='register'),
     path('bmi',views.bmi,name='bmi'),
     path('about',views.about,name='about'),

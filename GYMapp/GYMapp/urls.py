@@ -26,6 +26,10 @@ urlpatterns = [
     path('',include('dashboard.urls')),
     path('',include('trainer.urls')),
     path('',include('payment.urls')),
+    path('',include('packages.urls')),
+    path('',include('workouts.urls')),
+    path('api/', include('progress.urls')),
+    path('',include('diet.urls')),
     
 
 ]

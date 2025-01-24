@@ -33,7 +33,7 @@ class Member(models.Model):
     dob = models.DateField()
     pending_amount = models.FloatField(null=True)
     
-    trainer = models.ForeignKey(Trainer, null=True, on_delete=models.CASCADE, related_name='trainer')
+    trainer = models.ForeignKey(Trainer, null=True, on_delete=models.CASCADE, related_name='members')
     package = models.ForeignKey(Packages, null=True, on_delete=models.CASCADE, related_name='package')
 
     delete_status = models.IntegerField(choices=DELETE_CHOICES, default=LIVE)

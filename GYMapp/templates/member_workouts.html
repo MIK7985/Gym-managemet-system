@@ -1,0 +1,51 @@
+{% extends "blank_layot.html" %}
+
+{% block content %}
+<div class="d-flex flex-column" id="content-wrapper">
+    <div id="content" class="mt-5">
+        <div class="container-fluid">
+            <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                <h3 class="text-dark mb-0">Your Workouts</h3>
+            </div>
+
+            <!-- Day-wise Workouts List -->
+            <div class="col-md-12">
+                <h5 class="text-dark">Your Assigned Workouts</h5>
+                {% if workouts_by_day %}
+                    <div class="accordion" id="workoutsAccordion">
+                        {% for day, workouts in workouts_by_day.items %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{ day }}">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ day }}" aria-expanded="true" aria-controls="collapse{{ day }}">
+                                        {{ day }}
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ day }}" class="accordion-collapse collapse" aria-labelledby="heading{{ day }}" data-bs-parent="#workoutsAccordion">
+                                    <div class="accordion-body">
+                                        <ul class="list-group">
+                                            {% for workout in workouts %}
+                                                <li class="list-group-item">
+                                                    <strong>{{ workout.title }}</strong><br>
+                                                    <p>{{ workout.description }}</p>
+                                                    {% if workout.video %}
+                                                        <video controls class="w-100 mt-2">
+                                                            <source src="{{ workout.video.url }}" type="video/mp4">
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    {% endif %}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>You don't have any workouts assigned yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

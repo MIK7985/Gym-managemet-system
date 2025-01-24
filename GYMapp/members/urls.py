@@ -29,6 +29,6 @@ urlpatterns = [
     path('member_profile',views.member_profile,name='member_profile'),
     path('member_profile_single/<int:member_id>/',views.member_profile_single, name='member_profile_single'),
 
-    
+     
 ]
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

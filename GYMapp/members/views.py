@@ -46,7 +46,7 @@ def login_member(request):
             elif request.user.groups.filter(name='Member').exists():
                 return redirect('member_profile')  # Redirect to member profile for members
             else:
-                return redirect('home')  # Default redirect if role is undefined
+                return redirect('dashboard')  # Default redirect if role is undefined
 
         else:
             error_message = "Invalid credentials"
@@ -195,7 +195,7 @@ def update_member(request, member_id):
 def delete_member(request, member_id):
     member = get_object_or_404(Member, id=member_id)
     if request.method == 'POST':
-        member.delete()
+        member.delete() 
         return redirect(reverse('member'))
     
 @login_required

@@ -25,7 +25,12 @@ INSTALLED_APPS = [
     'packages',  # Your custom app
     'payment',   # Your payment app
     'attendance',
-     'dashboard',
+    'dashboard',
+    'workouts',
+    'progress',
+    'rest_framework',
+    'diet',
+
      
 ]
 

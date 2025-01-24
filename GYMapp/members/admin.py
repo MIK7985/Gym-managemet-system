@@ -25,4 +25,4 @@ class CustomUserAdmin(DefaultUserAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(Member)
+admin.site.register(Member),

@@ -23,6 +23,7 @@ from . import views
 
 urlpatterns = [
     path('trainer',views.add_Trainer,name='trainer'),
+    path('trainer_member',views.trainer_member,name='trainer_member'),
     path('trainer/delete/<int:trainer_id>/', views.delete_trainer, name='delete_trainer'), 
     path('trainer/update/<int:trainer_id>/', views.update_trainer, name='update_trainer'),
 
